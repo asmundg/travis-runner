@@ -1,11 +1,14 @@
 import glob
 import json
 import subprocess
+import sys
 
 from . import generate
 
 
 def main():
+    failed = False
+
     generate.main()
     for env in glob.glob('.travis-runner-*.sh'):
         links = json.load(open(env + '.links'))
@@ -24,3 +27,7 @@ def main():
             if links:
                 subprocess.check_call(
                     'docker rm -f {name}'.format(**links), shell=True)
+            failed = True
+
+    if failed:
+        sys.exit(1)
