@@ -144,13 +144,14 @@ def setup_python(config, envs):
 
 def build_steps(config, env):
     _sudo = config.get('sudo', True)
-    if _sudo:
-        env.append('sudo apt-get update')
-        env.append('sudo apt-get install --no-install-recommends --yes sudo')
+    if not _sudo:
+        env.append('apt-get update')
+        env.append('apt-get install --no-install-recommends --yes sudo')
     env.append('cp -ar /src /work')
     env.append('cd /work')
     for step in ('before_install', 'install', 'before_script', 'script'):
         for command in listify(config.get(step, [])):
-            if _sudo:
-                command = 'sudo -u nobody {}'.format(command)
+            if not _sudo and step in ('before_script', 'script'):
+                env.append('chown -R nobody /work')
+                command = 'sudo -E -u nobody env PATH=$PATH {}'.format(command)
             env.append(command)
