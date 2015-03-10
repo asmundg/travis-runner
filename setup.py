@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(name='travis-runner',
-      version='0.1.1',
+      version='0.2.0',
       description='Local job runner for travis using docker',
       url='https://github.com/asmundg/travis-runner',
       author='Åsmund Grammeltvedt',
