@@ -143,7 +143,13 @@ def setup_python(config, envs):
 
 
 def build_steps(config, env):
+    _sudo = config.get('sudo', True)
+    if _sudo:
+        env.append('sudo apt-get update')
+        env.append('sudo apt-get install --no-install-recommends --yes sudo')
     env.append('cd /work')
     for step in ('before_install', 'install', 'before_script', 'script'):
         for command in listify(config.get(step, [])):
+            if _sudo:
+                command = 'sudo -u nobody {}'.format(command)
             env.append(command)
