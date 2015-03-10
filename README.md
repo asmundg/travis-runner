@@ -3,8 +3,8 @@ Local job runner for travis using docker
 
 # Dependencies
 
- #. Docker
- #. python3
+ * Docker
+ * python3
 
 # Getting started
 
@@ -14,9 +14,9 @@ Local job runner for travis using docker
 
 # Supported language presets
 
- #. Go (language: go)
- #. Node (language: node_js)
- #. Python (language: python)
+ * Go (language: go)
+ * Node (language: node_js)
+ * Python (language: python)
 
 # Conformance
 
