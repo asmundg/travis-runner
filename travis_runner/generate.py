@@ -76,22 +76,38 @@ def setup_script_env(config, env):
 
 
 def language_setup(config, envs):
-    if config.get('language') == 'python':
-        setup_python(config, envs)
+    if config.get('language') == 'go':
+        setup_go(config, envs)
     elif config.get('language') == 'node_js':
         setup_node(config, envs)
+    elif config.get('language') == 'python':
+        setup_python(config, envs)
     else:
         envs.append([])
 
 
-def setup_python(config, envs):
-    setup = []
-    envs.append(setup)
-    setup.append('apt-get update')
-    setup.append(
-        'apt-get install --no-install-recommends --yes'
-        ' python python-dev python-setuptools')
-    setup.append('easy_install pip')
+def setup_go(config, envs):
+    """
+     Install go dependencies
+
+     language: go
+     go:
+       - "1.4"
+    """
+    for version in listify(config.get('go', ['1.4'])):
+        setup = []
+        envs.append(setup)
+        setup.append('apt-get update')
+        setup.append('apt-get install --no-install-recommends --yes'
+                     ' ca-certificates curl git')
+        setup.append(
+            'curl https://storage.googleapis.com/golang/'
+            'go{0}.linux-amd64.tar.gz -o /tmp/go.tar.gz'
+            .format(version))
+        setup.append('tar xf /tmp/go.tar.gz -C /usr/local/')
+        setup.append('export GOROOT=/usr/local/go')
+        setup.append('export GOPATH=/tmp')
+        setup.append('export PATH=$PATH:$GOROOT/bin')
 
 
 def setup_node(config, envs):
@@ -114,6 +130,16 @@ def setup_node(config, envs):
             ' -o /tmp/nvm.sh')
         setup.append('. /tmp/nvm.sh')
         setup.append('nvm install {}'.format(version))
+
+
+def setup_python(config, envs):
+    setup = []
+    envs.append(setup)
+    setup.append('apt-get update')
+    setup.append(
+        'apt-get install --no-install-recommends --yes'
+        ' python python-dev python-setuptools')
+    setup.append('easy_install pip')
 
 
 def build_steps(config, env):
