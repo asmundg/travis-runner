@@ -147,6 +147,7 @@ def build_steps(config, env):
     if _sudo:
         env.append('sudo apt-get update')
         env.append('sudo apt-get install --no-install-recommends --yes sudo')
+    env.append('cp -ar /src /work')
     env.append('cd /work')
     for step in ('before_install', 'install', 'before_script', 'script'):
         for command in listify(config.get(step, [])):

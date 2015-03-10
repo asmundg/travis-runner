@@ -20,8 +20,8 @@ def main():
             link_arg = '--link {name}:{link}'.format(**links)
         try:
             subprocess.check_call(
-                'docker run {} --rm -e http_proxy=$http_proxy -v $(pwd):/work'
-                '  ubuntu:precise bash -ex /work/{}'.format(
+                'docker run {} --rm -e http_proxy=$http_proxy -v $(pwd):/src'
+                '  ubuntu:precise bash -ex /src/{}'.format(
                     link_arg, env), shell=True)
         except subprocess.CalledProcessError:
             if links:
