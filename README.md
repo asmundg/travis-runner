@@ -4,12 +4,11 @@ Local job runner for travis using docker
 # Dependencies
 
  * Docker
- * python3
 
 # Getting started
 
     pip install --user vex
-    vex --python python3.4 -m travis-runner python setup.py install
+    vex -m travis-runner python setup.py install
     vex travis-runner travis-runner
 
 # Supported language presets

@@ -20,5 +20,5 @@ setup(name='travis-runner',
           'Intended Audience :: Information Technology',
           'License :: OSI Approved :: MIT License',
           'Operating System :: POSIX',
-          'Programming Language :: Python :: 3',
+          'Programming Language :: Python',
           'Topic :: Software Development :: Testing'])
