@@ -3,6 +3,7 @@ import os
 import uuid
 
 import begin
+from distutils.version import LooseVersion
 import yaml
 
 
@@ -53,6 +54,11 @@ def listify(arg):
         return [arg]
 
 
+def apt_get(*packages):
+    return ('apt-get update && apt-get install --no-install-recommends --yes'
+            '  {}'.format(' '.join(packages)))
+
+
 def setup_system_env(env):
     proxy = os.environ.get('http_proxy')
     if proxy is not None:
@@ -97,9 +103,7 @@ def setup_go(config, envs):
     for version in listify(config.get('go', ['1.4'])):
         setup = []
         envs.append(setup)
-        setup.append('apt-get update')
-        setup.append('apt-get install --no-install-recommends --yes'
-                     ' ca-certificates curl git')
+        setup.append(apt_get('ca-certificates', 'curl', 'git'))
         setup.append(
             'curl https://storage.googleapis.com/golang/'
             'go{0}.linux-amd64.tar.gz -o /tmp/go.tar.gz'
@@ -121,11 +125,9 @@ def setup_node(config, envs):
     for version in listify(config.get('node_js', [])):
         setup = []
         envs.append(setup)
-        setup.append('apt-get update')
-        setup.append('apt-get install --no-install-recommends --yes'
-                     ' ca-certificates curl')
+        setup.append(apt_get('ca-certificates', 'curl'))
         setup.append(
-            'curl --location --insecure'
+            'curl --location'
             ' https://raw.github.com/creationix/nvm/master/nvm.sh'
             ' -o /tmp/nvm.sh')
         setup.append('. /tmp/nvm.sh')
@@ -133,13 +135,18 @@ def setup_node(config, envs):
 
 
 def setup_python(config, envs):
-    setup = []
-    envs.append(setup)
-    setup.append('apt-get update')
-    setup.append(
-        'apt-get install --no-install-recommends --yes'
-        ' python python-dev python-setuptools')
-    setup.append('easy_install pip')
+    for version in listify(config.get('python', ['2.7'])):
+        setup = []
+        envs.append(setup)
+
+        setup.append(
+            apt_get('python-setuptools', 'python-software-properties'))
+        setup.append('apt-add-repository --yes ppa:fkrull/deadsnakes')
+        setup.append(apt_get('python{}-dev'.format(version)))
+        setup.append('easy_install virtualenv')
+        setup.append(
+            'virtualenv --python python{} /tmp/virtualenv'.format(version))
+        setup.append('. /tmp/virtualenv/bin/activate')
 
 
 def build_steps(config, env):
