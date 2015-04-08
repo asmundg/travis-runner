@@ -3,7 +3,6 @@ import os
 import uuid
 
 import begin
-from distutils.version import LooseVersion
 import yaml
 
 
@@ -19,7 +18,10 @@ def main(config='.travis.yml'):
         build_steps(config, env)
         sh_name = '.travis-runner-{}.sh'.format(i)
         with open(sh_name, 'w') as f:
-            f.write('\n'.join(env))
+            f.write(
+                '\n'.join([
+                    '{0} || (echo "Command {0} exited with code $?"; exit 1)'
+                    .format(cmd) for cmd in env]))
         with open(sh_name + '.links', 'w') as f:
             f.write(json.dumps(services(config)))
 
