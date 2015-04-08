@@ -68,6 +68,7 @@ def setup_system_env(env):
             0, 'echo "Acquire::http::Proxy \\"{}\\";" > /etc/apt/apt.conf'
             .format(proxy))
         env.insert(0, 'export http_proxy={}'.format(proxy))
+    env.insert(0, 'set -o errexit')
     env.insert(0, 'set -o pipefail')
 
 
@@ -132,7 +133,11 @@ def setup_node(config, envs):
             'curl --location'
             ' https://raw.github.com/creationix/nvm/master/nvm.sh'
             ' -o /tmp/nvm.sh')
+        # Disable error checking in NVM
+        # (https://github.com/creationix/nvm/issues/721)
+        setup.append('set +o errexit')
         setup.append('. /tmp/nvm.sh')
+        setup.append('set -o errexit')
         setup.append('nvm install {}'.format(version))
 
 

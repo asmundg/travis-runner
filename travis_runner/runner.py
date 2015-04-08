@@ -21,7 +21,7 @@ def main():
         try:
             subprocess.check_call(
                 'docker run {} --rm -e http_proxy=$http_proxy -v $(pwd):/src'
-                '  ubuntu:precise bash -ex /src/{}'.format(
+                '  ubuntu:precise bash -x /src/{}'.format(
                     link_arg, env), shell=True)
         except subprocess.CalledProcessError:
             if links:
