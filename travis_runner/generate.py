@@ -7,8 +7,8 @@ import yaml
 
 
 @begin.start
-def main(config='.travis.yml'):
-    config = yaml.load(open(os.path.join(config)))
+def main(config='.travis.yml', destdir='.'):
+    config = yaml.load(open(config))
     envs = []
     language_setup(config, envs)
     for i, env in enumerate(envs):
@@ -16,7 +16,7 @@ def main(config='.travis.yml'):
         setup_script_env(config, env)
         setup_addon_env(config, env)
         build_steps(config, env)
-        sh_name = '.travis-runner-{}.sh'.format(i)
+        sh_name = os.path.join(destdir, '.travis-runner-{}.sh'.format(i))
         with open(sh_name, 'w') as f:
             f.write(
                 '\n'.join([
