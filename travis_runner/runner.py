@@ -28,7 +28,7 @@ def tempdir(debug=False):
 @begin.start
 @begin.logging
 def main(debug=False):
-    failed = False
+    failed = True
 
     with tempdir(debug) as _dir:
         generate.main(destdir=_dir)
@@ -48,11 +48,11 @@ def main(debug=False):
                     ' -v {1}:/{1}'
                     ' ubuntu:precise bash -x {2}'.format(
                         link_arg, _dir, env), shell=True)
+                failed = False
             except subprocess.CalledProcessError:
                 if links:
                     subprocess.check_call(
                         'docker rm -f {name}'.format(**links), shell=True)
-                    failed = True
 
     if failed:
         sys.exit(1)
