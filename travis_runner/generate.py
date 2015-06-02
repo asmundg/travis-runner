@@ -123,7 +123,9 @@ def setup_matrix_env(config, env):
 
 
 def language_setup(config, envs):
-    if config.get('language') == 'go':
+    if config.get('language') == 'c':
+        setup_c(config, envs)
+    elif config.get('language') == 'go':
         setup_go(config, envs)
     elif config.get('language') == 'node_js':
         setup_node(config, envs)
@@ -131,6 +133,14 @@ def language_setup(config, envs):
         setup_python(config, envs)
     else:
         envs.append([])
+
+
+def setup_c(config, envs):
+    for compiler in listify(config.get('compiler', ['gcc'])):
+        setup = []
+        envs.append(setup)
+        setup.append(apt_get('clang gcc automake autoconf make scons'))
+        setup.append('export CC={}'.format(compiler))
 
 
 def setup_go(config, envs):
