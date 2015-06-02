@@ -72,6 +72,7 @@ def setup_system_env(env):
         env.insert(0, 'export http_proxy={}'.format(proxy))
     env.insert(0, 'set -o errexit')
     env.insert(0, 'set -o pipefail')
+    env.append(apt_get('sudo'))
 
 
 def setup_global_env(config, env):
