@@ -13,6 +13,7 @@ Local job runner for travis using docker
 
 # Supported language presets
 
+ * C (language: c)
  * Go (language: go)
  * Node (language: node_js)
  * Python (language: python)
