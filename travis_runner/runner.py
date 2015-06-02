@@ -27,11 +27,14 @@ def tempdir(debug=False):
 
 @begin.start
 @begin.logging
-def main(debug=False):
+def main(debug=False, dry_run=False):
     failed = True
 
     with tempdir(debug) as _dir:
         generate.main(destdir=_dir)
+        if dry_run:
+            return
+
         for env in glob.glob(os.path.join(_dir, '.travis-runner-*.sh')):
             links = json.load(open(env + '.links'))
             link_arg = ''

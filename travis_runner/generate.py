@@ -1,3 +1,4 @@
+import itertools
 import json
 import os
 import uuid
@@ -11,9 +12,10 @@ def main(config='.travis.yml', destdir='.'):
     config = yaml.load(open(config))
     envs = []
     language_setup(config, envs)
+    envs = itertools.chain(*[setup_matrix_env(config, env) for env in envs])
     for i, env in enumerate(envs):
         setup_system_env(env)
-        setup_script_env(config, env)
+        setup_global_env(config, env)
         setup_addon_env(config, env)
         build_steps(config, env)
         sh_name = os.path.join(destdir, '.travis-runner-{}.sh'.format(i))
@@ -72,16 +74,51 @@ def setup_system_env(env):
     env.insert(0, 'set -o pipefail')
 
 
-def setup_script_env(config, env):
+def setup_global_env(config, env):
     """
      Get global env variables
 
      env:
        global:
          - FOO=bar
+       matrix:
+         - BAR=bar
+         - BAR=baz
     """
-    for val in listify(config.get('env', {}).get('global', [])):
-        env.append('export {}'.format(val))
+    envs = config.get('env', {})
+    if isinstance(envs, dict):
+        for val in listify(envs.get('global', {})):
+            env.append('export {}'.format(val))
+
+
+def setup_matrix_env(config, env):
+    """Get matrix env variables. Returns a list of env permutations.
+
+     env:
+       global:
+         - FOO=bar
+       matrix:
+         - BAR=bar
+         - BAR=baz
+     or
+
+     env:
+       - BAR=bar
+       - BAR=baz
+
+     will generate permutations of the original env with the matrix
+     variables:
+
+     [[BAR=bar, <env>], [BAR=baz, <env>]]
+
+    """
+    envs = config.get('env', {})
+    if isinstance(envs, dict):
+        matrix = listify(envs.get('matrix', []))
+    else:
+        matrix = listify(envs)
+
+    return [env[:] + ['export {}'.format(val)] for val in matrix]
 
 
 def language_setup(config, envs):
