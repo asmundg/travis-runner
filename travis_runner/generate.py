@@ -88,7 +88,7 @@ def setup_global_env(config, env):
     """
     envs = config.get('env', {})
     if isinstance(envs, dict):
-        for val in listify(envs.get('global', {})):
+        for val in listify(envs.get('global', [])):
             env.append('export {}'.format(val))
 
 
@@ -119,7 +119,8 @@ def setup_matrix_env(config, env):
     else:
         matrix = listify(envs)
 
-    return [env[:] + ['export {}'.format(val)] for val in matrix]
+    return ([env[:] + ['export {}'.format(val)] for val in matrix]
+            if matrix else [env[:]])
 
 
 def language_setup(config, envs):
@@ -206,9 +207,6 @@ def setup_python(config, envs):
 
 def build_steps(config, env):
     _sudo = config.get('sudo', True)
-    if not _sudo:
-        env.append('apt-get update')
-        env.append('apt-get install --no-install-recommends --yes sudo')
     env.append('cp -ar /src /work')
     env.append('cd /work')
     for step in ('before_install', 'install', 'before_script', 'script'):
