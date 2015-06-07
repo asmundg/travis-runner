@@ -6,6 +6,8 @@ import uuid
 import begin
 import yaml
 
+from . import crypto
+
 
 @begin.start
 def main(config='.travis.yml', destdir='.'):
@@ -75,6 +77,13 @@ def setup_system_env(env):
     env.append(apt_get('sudo'))
 
 
+def decrypt_secure(val):
+    if isinstance(val, dict) and val.keys() == ['secure']:
+        return crypto.decrypt(val.values()[0])
+    else:
+        return val
+
+
 def setup_global_env(config, env):
     """
      Get global env variables
@@ -89,7 +98,7 @@ def setup_global_env(config, env):
     envs = config.get('env', {})
     if isinstance(envs, dict):
         for val in listify(envs.get('global', [])):
-            env.append('export {}'.format(val))
+            env.append('export {}'.format(decrypt_secure(val)))
 
 
 def setup_matrix_env(config, env):
@@ -119,6 +128,7 @@ def setup_matrix_env(config, env):
     else:
         matrix = listify(envs)
 
+    matrix = [decrypt_secure(val) for val in matrix]
     return ([env[:] + ['export {}'.format(val)] for val in matrix]
             if matrix else [env[:]])
 

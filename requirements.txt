@@ -1,2 +1,4 @@
-PyYAML==3.11
 begins==0.9
+funcsigs==0.4
+pycrypto==2.6.1
+PyYAML==3.11

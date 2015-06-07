@@ -9,9 +9,12 @@ setup(name='travis-runner',
       author_email='asmundg@big-oil.org',
       license='MIT license',
       install_requires=['PyYAML',
-                        'begins'],
+                        'begins',
+                        'pycrypto'],
       entry_points=dict(
-          console_scripts=['travis-runner=travis_runner.runner:main.start']),
+          console_scripts=[
+              'travis-runner=travis_runner.runner:main.start',
+              'travis-runner-crypto=travis_runner.crypto:run.start']),
       packages=find_packages(),
       classifiers=[
           'Development Status :: 3 - Alpha',
