@@ -18,6 +18,11 @@ Local job runner for travis using docker
  * Node (language: node_js)
  * Python (language: python)
 
+# Supported databases
+
+ * MongoDB (services: mongodb)
+ * PostgreSQL (addons: postgresql)
+
 # Conformance
 
 Everything is intended to work as documented by Travis

@@ -29,14 +29,21 @@ def main(config='.travis.yml', destdir='.'):
 
 
 def services(config):
+    links = []
     pg_version = config.get('addons', {}).get('postgresql')
+    mongo = 'mongodb' in config.get('services', [])
     if pg_version is not None:
-        name = str(uuid.uuid4())
-        return dict(
-            name=name, args='-e POSTGRES_PASSWORD=pg',
-            image='postgres:{}'.format(pg_version), link='postgres')
-    else:
-        return dict()
+        links.append(
+            dict(
+                name=str(uuid.uuid4()), args='-e POSTGRES_PASSWORD=pg',
+                image='postgres:{}'.format(pg_version), link='postgres'))
+    if mongo:
+        links.append(
+            dict(
+                name=str(uuid.uuid4()), args='',
+                image='mongo:2.6.10', link='mongodb'))
+
+    return links
 
 
 def setup_addon_env(config, env):

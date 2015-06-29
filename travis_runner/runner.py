@@ -38,12 +38,12 @@ def main(debug=False, dry_run=False):
         for env in glob.glob(os.path.join(_dir, '.travis-runner-*.sh')):
             links = json.load(open(env + '.links'))
             link_arg = ''
-            if links:
+            for link in links:
                 subprocess.check_call(
                     'docker run --name {name} {args} -d {image}'
-                    .format(**links),
+                    .format(**link),
                     shell=True)
-                link_arg = '--link {name}:{link}'.format(**links)
+                link_arg += '--link {name}:{link}'.format(**link)
             try:
                 subprocess.check_call(
                     'docker run {0} --rm -e http_proxy=$http_proxy'
