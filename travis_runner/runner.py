@@ -54,8 +54,9 @@ def main(debug=False, dry_run=False):
                 failed = False
             except subprocess.CalledProcessError:
                 if links:
-                    subprocess.check_call(
-                        'docker rm -f {name}'.format(**links), shell=True)
+                    for link in links:
+                        subprocess.check_call(
+                            'docker rm -f {name}'.format(**link), shell=True)
 
     if failed:
         sys.exit(1)
