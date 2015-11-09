@@ -31,6 +31,14 @@ Then, in a folder containing a .travis.yml:
  * MongoDB (services: mongodb)
  * PostgreSQL (addons: postgresql)
 
+# Configuration
+
+## Python
+
+If the TRAVIS_RUNNER_PIP_CACHE env variable is defined, this folder
+will be used as a persistent pip cache for tarballs and
+wheels.
+
 # Conformance
 
 Everything is intended to work as documented by Travis
