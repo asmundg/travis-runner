@@ -1,5 +1,8 @@
 # travis-runner
-Local job runner for travis using docker
+Local job runner for travis using docker.
+
+This will execute jobs defined in a .travis.yml file, exiting with an
+error code if anything fails.
 
 # Dependencies
 
@@ -7,8 +10,13 @@ Local job runner for travis using docker
 
 # Getting started
 
+To install:
+
     pip install --user vex
-    vex -m travis-runner python setup.py install
+    vex -m travis-runner pip install travis-runner
+
+Then, in a folder containing a .travis.yml:
+
     vex travis-runner travis-runner
 
 # Supported language presets
