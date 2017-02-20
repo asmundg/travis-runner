@@ -26,6 +26,7 @@ def main(config='.travis.yml', destdir='.'):
                     .format(cmd) for cmd in env]))
         with open(sh_name + '.links', 'w') as f:
             f.write(json.dumps(services(config)))
+    return config
 
 
 def services(config):
