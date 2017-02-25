@@ -208,7 +208,8 @@ def setup_python(config, envs):
         envs.append(setup)
 
         setup.append(
-            apt_get('python-setuptools', 'python-software-properties'))
+            apt_get('python-setuptools', 'python-software-properties',
+                    'software-properties-common'))
         setup.append('apt-add-repository --yes ppa:fkrull/deadsnakes')
         setup.append(apt_get('python{}-dev'.format(version)))
         setup.append('easy_install virtualenv')
