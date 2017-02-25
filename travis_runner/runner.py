@@ -61,7 +61,7 @@ def main(debug=False, dry_run=False):
                 '-v {1}:/{1}',
                 use_pip_cache(),
                 'ubuntu:{3} bash -x {2}')).format(
-                        link_arg, _dir, env, config.get('dist', 'latest'))
+                        link_arg, _dir, env, config.get('dist', 'trusty'))
             try:
                 subprocess.check_call(cmd, shell=True)
                 failed = False
