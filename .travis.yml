@@ -7,3 +7,6 @@ script:
   - pushd tests/python
   - travis-runner
   - popd
+  - pushd tests/tools
+  - travis-runner
+  - popd
