@@ -2,8 +2,13 @@ language: python
 services:
   - docker
 
-install: pip install -r requirements.txt
+install:
+  - pip install -r requirements.txt
+  - python setup.py install
 script:
   - pushd tests/python
+  - travis-runner
+  - popd
+  - pushd tests/tools
   - travis-runner
   - popd

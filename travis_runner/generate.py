@@ -7,10 +7,19 @@ import begin
 import yaml
 
 
+def apt_get(*packages):
+    return ('apt-get update && apt-get install --no-install-recommends --yes'
+            '  {}'.format(' '.join(packages)))
+
+
+TOOLS = [apt_get('git')]
+
+
 @begin.start
 def main(config='.travis.yml', destdir='.'):
     config = yaml.load(open(config))
     envs = []
+    envs.append(TOOLS)
     language_setup(config, envs)
     envs = itertools.chain(*[setup_matrix_env(config, env) for env in envs])
     for i, env in enumerate(envs):
@@ -64,11 +73,6 @@ def listify(arg):
         return arg
     else:
         return [arg]
-
-
-def apt_get(*packages):
-    return ('apt-get update && apt-get install --no-install-recommends --yes'
-            '  {}'.format(' '.join(packages)))
 
 
 def setup_system_env(env):
@@ -204,7 +208,8 @@ def setup_python(config, envs):
         envs.append(setup)
 
         setup.append(
-            apt_get('python-setuptools', 'python-software-properties'))
+            apt_get('python-setuptools', 'python-software-properties',
+                    'software-properties-common'))
         setup.append('apt-add-repository --yes ppa:fkrull/deadsnakes')
         setup.append(apt_get('python{}-dev'.format(version)))
         setup.append('easy_install virtualenv')
